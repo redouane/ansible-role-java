@@ -1,0 +1,4 @@
+---
+
+- name: Install Oracle Java
+  include: java.yml

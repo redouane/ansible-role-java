@@ -1,0 +1,22 @@
+---
+
+- name: Import WebUpd8 PGP key
+  sudo: yes
+  apt_key: keyserver=keyserver.ubuntu.com id=EEA14886 state=present
+
+- name: add the WebUpd8 Oracle Java PPA repository (for Ubuntu)
+  apt_repository: repo=ppa:webupd8team/java state=present
+  sudo: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: automatically accept the Oracle license
+  sudo: yes
+  debconf: name="oracle-java{{ java_version }}-installer" question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+- name: install JDK
+  sudo: yes
+  apt: pkg="oracle-java{{ java_version }}-installer" state=present force=yes
+
+- name: set this as default Java; also environment variables
+  sudo: yes
+  apt: pkg="oracle-java{{ java_version }}-set-default" state=present force=yes
